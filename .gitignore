@@ -1,0 +1,31 @@
+# --- Secretos / claves ---
+.env
+*.env
+!.env.example
+
+# --- Python ---
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# --- Salida generada por la app ---
+output/
+logs/
+*.log
+
+# --- Briefing y planificacion interna (no subir a GitHub) ---
+Content Enrichment.html
+Content Enrichment_files/
+PLAN_DE_TRABAJO.md
+
+# --- Sistema operativo / editores ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
