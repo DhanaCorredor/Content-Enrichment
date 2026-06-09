@@ -125,7 +125,7 @@ Todas las llamadas de red/API se **mockean**: los tests no usan internet ni gast
 
 ## Documentación
 
-- **Documentación completa (wiki, arquitectura, plan)**: [Notion](https://app.notion.com/p/dhanacorredor/37a54980d23480b1beb1fc50fe329cd7?v=37a54980d234805eb17a000c067172c7&source=copy_link).
+- **Documentación completa (wiki, arquitectura, plan)**: [Notion](https://dhanacorredor.notion.site/Content-Enrichment-37a54980d234800287bac946f40e436a).
 - **Tablero de tareas (Kanban)**: [GitHub Projects #6](https://github.com/users/DhanaCorredor/projects/6).
 
 ---

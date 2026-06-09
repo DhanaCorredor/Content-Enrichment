@@ -1,5 +1,8 @@
 """Etapa 1: scraping de Wikipedia."""
 
+import requests
+from bs4 import BeautifulSoup
+
 
 class ArticuloNoEncontrado(Exception):
     """Se lanza cuando Wikipedia no devuelve un articulo para el tema dado."""
@@ -23,4 +26,32 @@ class WikipediaScraper:
 
         Lanza ArticuloNoEncontrado si el tema no existe en Wikipedia.
         """
-        raise NotImplementedError
+        nombre = tema.strip().replace(" ", "_")
+        url = f"https://{self.idioma}.wikipedia.org/wiki/{nombre}"
+
+        respuesta = requests.get(
+            url,
+            headers={"User-Agent": self.USER_AGENT},
+            timeout=10,
+        )
+
+        if respuesta.status_code == 404:
+            raise ArticuloNoEncontrado(f"No se encontro un articulo para '{tema}'.")
+        respuesta.raise_for_status()
+
+        sopa = BeautifulSoup(respuesta.text, "html.parser")
+        titulo = sopa.find("h1", id="firstHeading").get_text(strip=True)
+
+        cuerpo = sopa.find("div", class_="mw-parser-output")
+        parrafos = []
+        for p in cuerpo.find_all("p"):
+            texto = p.get_text().strip()
+            if texto:
+                parrafos.append(texto)
+            if len(parrafos) == self.MAX_PARRAFOS:
+                break
+
+        if not parrafos:
+            raise ArticuloNoEncontrado(f"El articulo '{tema}' no tiene contenido legible.")
+
+        return {"titulo": titulo, "parrafos": parrafos}
