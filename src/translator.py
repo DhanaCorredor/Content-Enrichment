@@ -4,7 +4,7 @@
 class Translator:
     """Traduce texto al idioma destino usando deep-translator (Google).
 
-    Responsabilidad unica: traducir. No usa OpenAI. deep-translator no
+    Responsabilidad unica: traducir. No usa la IA (Groq). deep-translator no
     necesita clave de API.
     """
 

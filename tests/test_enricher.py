@@ -1,4 +1,4 @@
-"""Tests unitarios de Enricher (cliente OpenAI mockeado)."""
+"""Tests unitarios de Enricher (cliente de IA Groq, vía SDK de OpenAI, mockeado)."""
 
 import pytest
 

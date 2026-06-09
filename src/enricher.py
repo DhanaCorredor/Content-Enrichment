@@ -1,18 +1,19 @@
-"""Etapa 2: enriquecimiento del texto con la API de OpenAI."""
+"""Etapa 2: enriquecimiento del texto con la IA (Groq vía SDK de OpenAI)."""
 
 
 class Enricher:
-    """Mejora un texto usando OpenAI (modelo gpt-4o-mini).
+    """Mejora un texto usando Groq (modelo llama-3.3-70b-versatile).
 
-    Responsabilidad unica: hablar con OpenAI para enriquecer. La clave de API
-    se lee de .env (nunca hardcodear).
+    Responsabilidad unica: hablar con la IA para enriquecer. Se usa el SDK
+    oficial de openai apuntando al base_url de Groq; la clave se lee de .env
+    como GROQ_API_KEY (nunca hardcodear).
     """
 
-    MODELO = "gpt-4o-mini"
+    MODELO = "llama-3.3-70b-versatile"
 
     def __init__(self, client) -> None:
-        # 'client' es una instancia ya configurada de openai.OpenAI,
-        # inyectada para poder mockearla en los tests.
+        # 'client' es una instancia ya configurada de openai.OpenAI apuntando
+        # al base_url de Groq, inyectada para poder mockearla en los tests.
         self.client = client
 
     def enriquecer(self, texto: str) -> str:

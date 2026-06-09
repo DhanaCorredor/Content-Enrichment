@@ -1,4 +1,4 @@
-"""Tests unitarios de Summarizer (cliente OpenAI mockeado)."""
+"""Tests unitarios de Summarizer (cliente de IA Groq, vía SDK de OpenAI, mockeado)."""
 
 import pytest
 
