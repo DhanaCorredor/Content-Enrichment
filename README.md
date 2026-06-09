@@ -133,3 +133,7 @@ Todas las llamadas de red/API se **mockean**: los tests no usan internet ni gast
 ## Autora
 
 DhanaCorredor — FemCoders P5 Madrid.
+
+## Licencia
+
+Distribuido bajo licencia **MIT**. Ver [`LICENSE`](LICENSE).

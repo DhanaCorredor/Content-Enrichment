@@ -19,6 +19,35 @@ Wikipedia      texto crudo        texto mejorado          texto traducido       
 
 **Idea clave de diseño:** cada etapa recibe datos y devuelve datos. Manteniendo esa regla, cada parte se construye y se prueba **por separado**.
 
+### Flujo del usuario (flowchart)
+
+Recorrido de la usuaria al ejecutar la app desde la terminal:
+
+```mermaid
+flowchart TD
+    A(["Inicio: python src/main.py"]) --> B[/"Introduce el tema"/]
+    B --> C[/"Introduce el idioma destino"/]
+    C --> D["Buscar articulo en Wikipedia"]
+    D --> E{"¿Articulo encontrado?"}
+    E -- No --> F["Mostrar mensaje de error claro"]
+    F --> B
+    E -- Si --> G["Mostrar titulo + 5 parrafos"]
+    G --> H["Enriquecer texto con IA (Groq)"]
+    H --> I["Mostrar texto enriquecido"]
+    I --> J["Traducir al idioma elegido"]
+    J --> K["Mostrar texto traducido"]
+    K --> L{"¿Generar resumen?"}
+    L -- Si --> M["Generar resumen con IA"]
+    M --> N{"¿Guardar informe?"}
+    L -- No --> N
+    N -- No --> Z(["Fin"])
+    N -- Si --> O[/"Elegir formato (txt o pdf) y nombre"/]
+    O --> P["Exportar a la carpeta output/"]
+    P --> Z
+```
+
+> Las llamadas de red (Wikipedia, Groq, traducción) van envueltas en `try/except`: ante un fallo (sin conexión, clave inválida, límite de uso), la app muestra un mensaje claro en vez de romperse.
+
 ---
 
 ## 2. Arquitectura
@@ -32,9 +61,27 @@ Diseño **orientado a objetos** con **una clase por etapa** y **responsabilidad 
 | **Inyección de dependencias** | `Pipeline`, `Enricher` y `Summarizer` reciben sus colaboradores ya construidos (p. ej. el cliente de OpenAI). Esto permite **mockearlos en los tests**. |
 | **`main.py` sin lógica** | Solo lee la entrada del usuario, construye las clases (cableado) y delega en `Pipeline`. |
 
+```mermaid
+flowchart TD
+    M["main.py<br/>entrada CLI (solo cableado)"] -->|construye e inyecta| P["Pipeline<br/>orquestador"]
+
+    P --> S["WikipediaScraper"]
+    P --> E["Enricher"]
+    P --> T["Translator"]
+    P --> SU["Summarizer (extra)"]
+    P --> X["Exporter"]
+
+    S -.->|requests + BeautifulSoup| W[("Wikipedia")]
+    E -.->|SDK openai| G[("Groq API")]
+    SU -.->|SDK openai| G
+    T -.->|deep-translator| GT[("Google Translate")]
+    X -.->|escribe| F["output/ (.txt / .pdf)"]
+
+    ENV[(".env<br/>GROQ_API_KEY")] -.->|clave| E
+    ENV -.->|clave| SU
 ```
-main.py  ──construye──>  Pipeline  ──coordina──>  Scraper · Enricher · Translator · Summarizer · Exporter
-```
+
+> `logger_config` es transversal: cada etapa registra inicio/fin/errores en `logs/app.log`. `main.py` no contiene lógica de negocio; solo construye las clases y delega en `Pipeline`.
 
 ---
 
@@ -150,23 +197,14 @@ Content_Enrichment/
 
 ## 6. Flujo de datos
 
-```
-tema (str), idioma, nombre, formato
-        │
-        ▼
-WikipediaScraper.buscar_articulo(tema)  ──>  {'titulo', 'parrafos': [...]}
-        │   (se unen los párrafos en un texto)
-        ▼
-Enricher.enriquecer(texto)              ──>  texto enriquecido (str)
-        │
-        ▼
-Translator.traducir(texto)              ──>  texto traducido (str)
-        │
-        ▼  (opcional)
-Summarizer.resumir(texto)               ──>  resumen (str)
-        │
-        ▼
-Exporter.exportar(contenido, nombre, formato)  ──>  ruta del archivo (str)
+```mermaid
+flowchart TD
+    IN[/"Entrada: tema, idioma, nombre, formato"/] --> S["WikipediaScraper.buscar_articulo(tema)"]
+    S -->|"{titulo, parrafos[...]} → se unen en un texto"| E["Enricher.enriquecer(texto)"]
+    E -->|"texto enriquecido"| T["Translator.traducir(texto)"]
+    T -->|"texto traducido"| SU["Summarizer.resumir(texto)<br/>(opcional)"]
+    SU -->|"resumen"| X["Exporter.exportar(contenido, nombre, formato)"]
+    X -->|"ruta del archivo"| OUT[/"archivo .txt / .pdf en output/"/]
 ```
 
 > 📌 **Contrato pendiente de cerrar:** la forma exacta del `dict` `contenido` que recibe `Exporter` (qué claves lleva: original / enriquecido / traducido / resumen) se definirá al implementar el `Pipeline`. Documentar aquí cuando se decida.
