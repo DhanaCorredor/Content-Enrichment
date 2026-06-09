@@ -24,6 +24,11 @@ Content Enrichment.html
 Content Enrichment_files/
 PLAN_DE_TRABAJO.md
 
+# --- Claude / asistentes IA (no subir a GitHub) ---
+CLAUDE.md
+.claude/
+.mcp.json
+
 # --- Sistema operativo / editores ---
 .DS_Store
 Thumbs.db
