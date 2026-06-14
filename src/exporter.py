@@ -1,4 +1,4 @@
-"""Etapa 4: exportacion del resultado a .txt o .pdf."""
+"""Etapa 4: exportacion del resultado a .pdf."""
 
 import os
 from xml.sax.saxutils import escape
@@ -10,11 +10,11 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
 
 class FormatoNoSoportado(Exception):
-    """Se lanza cuando el formato pedido no es 'txt' ni 'pdf'."""
+    """Se lanza cuando el formato pedido no es 'pdf'."""
 
 
 class Exporter:
-    """Guarda el contenido en .txt o .pdf.
+    """Guarda el contenido en .pdf.
 
     Responsabilidad unica: persistir el resultado en disco. El PDF se genera
     con reportlab usando Flowables (SimpleDocTemplate + story), nunca con
