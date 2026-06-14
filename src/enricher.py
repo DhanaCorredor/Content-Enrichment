@@ -45,3 +45,34 @@ class Enricher:
             ) from error
 
         return respuesta.choices[0].message.content
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import os
+
+    from dotenv import load_dotenv
+    from openai import OpenAI
+
+    try:
+        from src.scraper import WikipediaScraper
+    except ModuleNotFoundError:
+        from scraper import WikipediaScraper
+
+    # 1. Cargar la clave de Groq desde .env
+    load_dotenv()
+    client = OpenAI(
+        base_url="https://api.groq.com/openai/v1",
+        api_key=os.environ["GROQ_API_KEY"],
+    )
+
+    # 2. Etapa 1: traer texto crudo de Wikipedia
+    articulo = WikipediaScraper(idioma="es").buscar_articulo("Marketing")
+    texto_original = "\n\n".join(articulo["parrafos"])
+
+    # 3. Etapa 2: enriquecer con la IA
+    texto_mejorado = Enricher(client).enriquecer(texto_original)
+
+    print("===== ORIGINAL (Wikipedia) =====\n")
+    print(texto_original)
+    print("\n===== ENRIQUECIDO (Groq) =====\n")
+    print(texto_mejorado)
