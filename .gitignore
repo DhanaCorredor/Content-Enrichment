@@ -1,7 +1,12 @@
-# --- Secretos / claves ---
+
+# --- Secretos / claves (NUNCA subir a git; .env.example si se sube) ---
 .env
 *.env
-!.env.example
+
+# --- Cobertura de tests ---
+.coverage
+.coverage.*
+htmlcov/
 
 # --- Python ---
 venv/
