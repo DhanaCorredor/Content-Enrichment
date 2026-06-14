@@ -21,7 +21,7 @@ class Exporter:
     posicionamiento manual del canvas (evita solapamientos).
     """
 
-    FORMATOS = ("txt", "pdf")
+    FORMATOS = ("pdf",)
 
     def __init__(self, carpeta_salida: str = "output") -> None:
         self.carpeta_salida = carpeta_salida
@@ -29,7 +29,7 @@ class Exporter:
     def exportar(self, contenido: dict, nombre: str, formato: str) -> str:
         """Guarda el archivo y devuelve la ruta final.
 
-        'formato' debe estar en {'txt', 'pdf'}; si no, lanza FormatoNoSoportado.
+        'formato' debe estar en {'pdf'}; si no, lanza FormatoNoSoportado.
         """
         if formato not in self.FORMATOS:
             raise FormatoNoSoportado(
@@ -39,24 +39,9 @@ class Exporter:
         os.makedirs(self.carpeta_salida, exist_ok=True)
         ruta = os.path.join(self.carpeta_salida, f"{nombre}.{formato}")
 
-        if formato == "txt":
-            self._exportar_txt(contenido, ruta)
-        else:
-            self._exportar_pdf(contenido, ruta)
+        self._exportar_pdf(contenido, ruta)
 
         return ruta
-
-    def _exportar_txt(self, contenido: dict, ruta: str) -> None:
-        titulo = contenido["titulo"]
-        lineas = [titulo, "=" * len(titulo), ""]
-        for encabezado, cuerpo in contenido["secciones"]:
-            lineas.append(encabezado)
-            lineas.append("-" * len(encabezado))
-            lineas.append(cuerpo)
-            lineas.append("")
-
-        with open(ruta, "w", encoding="utf-8") as archivo:
-            archivo.write("\n".join(lineas))
 
     def _exportar_pdf(self, contenido: dict, ruta: str) -> None:
         estilos = getSampleStyleSheet()
@@ -85,7 +70,5 @@ if __name__ == "__main__":  # pragma: no cover
             ("Traducido", "Translated sample text."),
         ],
     }
-    ruta_txt = Exporter().exportar(contenido_demo, "demo", "txt")
     ruta_pdf = Exporter().exportar(contenido_demo, "demo", "pdf")
-    print(f"TXT generado en: {ruta_txt}")
     print(f"PDF generado en: {ruta_pdf}")
