@@ -16,7 +16,7 @@ class WikipediaScraper:
     """
 
     MAX_PARRAFOS = 5
-    USER_AGENT = "ContentEnricher/1.0 (proyecto educativo FemCoders)"
+    USER_AGENT = "ContentEnricher/1.0 (bootcamp project; educational use)"
 
     def __init__(self, idioma: str = "es") -> None:
         self.idioma = idioma
@@ -55,3 +55,16 @@ class WikipediaScraper:
             raise ArticuloNoEncontrado(f"El articulo '{tema}' no tiene contenido legible.")
 
         return {"titulo": titulo, "parrafos": parrafos}
+
+
+if __name__ == "__main__":
+    scraper = WikipediaScraper(idioma="es")
+
+    try:
+        resultado = scraper.buscar_articulo("Marketing")
+        print(f"Título encontrado: {resultado['titulo']}\n")
+        print("Primer párrafo de muestra:")
+        print(resultado['parrafos'][0])
+
+    except ArticuloNoEncontrado as e:
+        print(f"Error esperado: {e}")
