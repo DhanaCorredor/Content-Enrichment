@@ -22,13 +22,11 @@ class Translator:
     """Traduce texto al idioma destino usando deep-translator (Google).
 
     Responsabilidad unica: traducir. No usa la IA (Groq). deep-translator no
-    necesita clave de API.
+    necesita clave de API. Es un servicio sin estado: el idioma destino se pasa
+    en cada llamada (es un dato de cada ejecucion, no configuracion fija).
     """
 
-    def __init__(self, idioma_destino: str) -> None:
-        self.idioma_destino = idioma_destino
-
-    def traducir(self, texto: str) -> str:
+    def traducir(self, texto: str, idioma_destino: str) -> str:
         """Devuelve el texto traducido al idioma destino.
 
         Traduce parrafo a parrafo (separados por lineas en blanco) para
@@ -36,7 +34,7 @@ class Translator:
         conservar la estructura del texto.
         """
         parrafos = texto.split("\n\n")
-        traductor = GoogleTranslator(source="auto", target=self.idioma_destino)
+        traductor = GoogleTranslator(source="auto", target=idioma_destino)
 
         try:
             traducidos = traductor.translate_batch(parrafos)
@@ -57,7 +55,7 @@ if __name__ == "__main__":  # pragma: no cover
     texto = "\n\n".join(articulo["parrafos"])
 
     # Etapa 3: traducir al ingles
-    traducido = Translator("en").traducir(texto)
+    traducido = Translator().traducir(texto, "en")
 
     print("===== ORIGINAL (es) =====\n")
     print(texto)

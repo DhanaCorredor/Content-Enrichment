@@ -23,10 +23,9 @@ class Pipeline:
         # 2. Enriquecer con la IA
         texto_enriquecido = self.enricher.enriquecer(texto_original)
 
-        # 3. Traducir la version enriquecida. El idioma se elige en tiempo de
-        # ejecucion, asi que lo fijamos en el traductor antes de traducir.
-        self.translator.idioma_destino = idioma_destino
-        texto_traducido = self.translator.traducir(texto_enriquecido)
+        # 3. Traducir la version enriquecida. El idioma destino es un dato de
+        # esta ejecucion, asi que se pasa directamente a traducir.
+        texto_traducido = self.translator.traducir(texto_enriquecido, idioma_destino)
 
         secciones = [
             ("Original", texto_original),
