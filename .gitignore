@@ -25,8 +25,6 @@ logs/
 *.log
 
 # --- Briefing y planificacion interna (no subir a GitHub) ---
-Content Enrichment.html
-Content Enrichment_files/
 PLAN_DE_TRABAJO.md
 
 # --- Claude / asistentes IA (no subir a GitHub) ---
