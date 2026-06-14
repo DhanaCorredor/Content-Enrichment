@@ -7,8 +7,8 @@ del pipeline (cableado) y delegar en Pipeline. Sin logica de negocio aqui.
 import os
 
 from dotenv import load_dotenv
-from openai import OpenAI
 
+from src.groq_client import crear_cliente_groq
 from src.scraper import WikipediaScraper, ArticuloNoEncontrado
 from src.enricher import Enricher, EnriquecimientoError
 from src.translator import Translator, TraduccionError
@@ -36,10 +36,7 @@ def main() -> None:
     idioma = _pedir("Idioma destino (ej. en, fr, it): ")
     nombre = _pedir("Nombre del archivo de salida: ")
 
-    client = OpenAI(
-        base_url="https://api.groq.com/openai/v1",
-        api_key=api_key,
-    )
+    client = crear_cliente_groq(api_key)
     pipeline = Pipeline(
         scraper=WikipediaScraper(idioma="es"),
         enricher=Enricher(client),

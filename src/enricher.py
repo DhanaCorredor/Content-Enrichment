@@ -51,19 +51,17 @@ if __name__ == "__main__":  # pragma: no cover
     import os
 
     from dotenv import load_dotenv
-    from openai import OpenAI
 
     try:
         from src.scraper import WikipediaScraper
+        from src.groq_client import crear_cliente_groq
     except ModuleNotFoundError:
         from scraper import WikipediaScraper
+        from groq_client import crear_cliente_groq
 
     # 1. Cargar la clave de Groq desde .env
     load_dotenv()
-    client = OpenAI(
-        base_url="https://api.groq.com/openai/v1",
-        api_key=os.environ["GROQ_API_KEY"],
-    )
+    client = crear_cliente_groq(os.environ["GROQ_API_KEY"])
 
     # 2. Etapa 1: traer texto crudo de Wikipedia
     articulo = WikipediaScraper(idioma="es").buscar_articulo("Marketing")
