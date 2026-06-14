@@ -41,36 +41,3 @@ class Pipeline:
         # 4. Exportar
         contenido = {"titulo": articulo["titulo"], "secciones": secciones}
         return self.exporter.exportar(contenido, nombre, formato)
-
-
-if __name__ == "__main__":  # pragma: no cover
-    import os
-
-    from dotenv import load_dotenv
-    from openai import OpenAI
-
-    try:
-        from src.scraper import WikipediaScraper
-        from src.enricher import Enricher
-        from src.translator import Translator
-        from src.exporter import Exporter
-    except ModuleNotFoundError:
-        from scraper import WikipediaScraper
-        from enricher import Enricher
-        from translator import Translator
-        from exporter import Exporter
-
-    load_dotenv()
-    client = OpenAI(
-        base_url="https://api.groq.com/openai/v1",
-        api_key=os.environ["GROQ_API_KEY"],
-    )
-
-    pipeline = Pipeline(
-        scraper=WikipediaScraper(idioma="es"),
-        enricher=Enricher(client),
-        translator=Translator("en"),
-        exporter=Exporter(),
-    )
-    ruta = pipeline.ejecutar("Marketing", "en", "informe_marketing", "pdf")
-    print(f"Informe generado en: {ruta}")
