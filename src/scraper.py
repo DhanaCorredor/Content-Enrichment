@@ -57,7 +57,7 @@ class WikipediaScraper:
         return {"titulo": titulo, "parrafos": parrafos}
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     scraper = WikipediaScraper(idioma="es")
 
     try:
