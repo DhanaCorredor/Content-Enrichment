@@ -14,10 +14,10 @@ def test_traducir_devuelve_texto_en_idioma_destino():
         instancia = MockGT.return_value
         instancia.translate_batch.return_value = ["Hello", "World"]
 
-        translator = Translator("en")
+        translator = Translator()
 
         # Act
-        resultado = translator.traducir("Hola\n\nMundo")
+        resultado = translator.traducir("Hola\n\nMundo", "en")
 
     # Assert
     assert resultado == "Hello\n\nWorld"
@@ -32,8 +32,8 @@ def test_traducir_error_lanza_excepcion():
     with patch("src.translator.GoogleTranslator") as MockGT:
         MockGT.return_value.translate_batch.side_effect = RequestError()
 
-        translator = Translator("en")
+        translator = Translator()
 
         # Act + Assert
         with pytest.raises(TraduccionError):
-            translator.traducir("Hola")
+            translator.traducir("Hola", "en")

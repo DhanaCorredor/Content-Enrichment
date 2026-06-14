@@ -75,6 +75,23 @@ HTML_SIN_CONTENIDO = """
 """
 
 
+# HTML 200 pero sin la estructura de un articulo (sin h1#firstHeading ni
+# div.mw-parser-output): debe lanzar ArticuloNoEncontrado, no un AttributeError.
+HTML_ESTRUCTURA_RARA = "<html><body><p>pagina sin estructura de wikipedia</p></body></html>"
+
+
+def test_buscar_articulo_estructura_inesperada_lanza_excepcion():
+    respuesta_falsa = Mock()
+    respuesta_falsa.status_code = 200
+    respuesta_falsa.text = HTML_ESTRUCTURA_RARA
+
+    with patch("src.scraper.requests.get", return_value=respuesta_falsa):
+        scraper = WikipediaScraper()
+
+        with pytest.raises(ArticuloNoEncontrado):
+            scraper.buscar_articulo("rara")
+
+
 def test_buscar_articulo_sin_parrafos_lanza_excepcion():
     # Arrange: respuesta 200 pero sin contenido legible
     respuesta_falsa = Mock()

@@ -40,7 +40,7 @@ def main() -> None:
     pipeline = Pipeline(
         scraper=WikipediaScraper(idioma="es"),
         enricher=Enricher(client),
-        translator=Translator(idioma),
+        translator=Translator(),
         exporter=Exporter(),
     )
 

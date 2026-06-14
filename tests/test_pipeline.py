@@ -31,8 +31,7 @@ def test_ejecutar_flujo_completo_devuelve_ruta():
     assert ruta == "output/informe.pdf"
     # El flujo de datos encadena correctamente cada etapa
     enricher.enriquecer.assert_called_once_with("P1\n\nP2")
-    translator.traducir.assert_called_once_with("enriquecido")
-    assert translator.idioma_destino == "en"
+    translator.traducir.assert_called_once_with("enriquecido", "en")
     # El exporter recibe el contenido bien armado
     contenido, nombre, formato = exporter.exportar.call_args.args
     assert nombre == "informe"
