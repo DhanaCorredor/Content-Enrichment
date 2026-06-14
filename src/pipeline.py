@@ -16,4 +16,61 @@ class Pipeline:
 
     def ejecutar(self, tema: str, idioma_destino: str, nombre: str, formato: str) -> str:
         """Ejecuta el flujo completo y devuelve la ruta del archivo generado."""
-        raise NotImplementedError
+        # 1. Scraping: texto crudo de Wikipedia
+        articulo = self.scraper.buscar_articulo(tema)
+        texto_original = "\n\n".join(articulo["parrafos"])
+
+        # 2. Enriquecer con la IA
+        texto_enriquecido = self.enricher.enriquecer(texto_original)
+
+        # 3. Traducir la version enriquecida. El idioma se elige en tiempo de
+        # ejecucion, asi que lo fijamos en el traductor antes de traducir.
+        self.translator.idioma_destino = idioma_destino
+        texto_traducido = self.translator.traducir(texto_enriquecido)
+
+        secciones = [
+            ("Original", texto_original),
+            ("Enriquecido", texto_enriquecido),
+            ("Traducido", texto_traducido),
+        ]
+
+        # Extra (HU-6): resumen, solo si se inyecto un Summarizer
+        if self.summarizer is not None:
+            secciones.append(("Resumen", self.summarizer.resumir(texto_enriquecido)))
+
+        # 4. Exportar
+        contenido = {"titulo": articulo["titulo"], "secciones": secciones}
+        return self.exporter.exportar(contenido, nombre, formato)
+
+
+if __name__ == "__main__":  # pragma: no cover
+    import os
+
+    from dotenv import load_dotenv
+    from openai import OpenAI
+
+    try:
+        from src.scraper import WikipediaScraper
+        from src.enricher import Enricher
+        from src.translator import Translator
+        from src.exporter import Exporter
+    except ModuleNotFoundError:
+        from scraper import WikipediaScraper
+        from enricher import Enricher
+        from translator import Translator
+        from exporter import Exporter
+
+    load_dotenv()
+    client = OpenAI(
+        base_url="https://api.groq.com/openai/v1",
+        api_key=os.environ["GROQ_API_KEY"],
+    )
+
+    pipeline = Pipeline(
+        scraper=WikipediaScraper(idioma="es"),
+        enricher=Enricher(client),
+        translator=Translator("en"),
+        exporter=Exporter(),
+    )
+    ruta = pipeline.ejecutar("Marketing", "en", "informe_marketing", "pdf")
+    print(f"Informe generado en: {ruta}")
