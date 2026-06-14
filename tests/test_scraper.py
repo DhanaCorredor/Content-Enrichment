@@ -58,3 +58,32 @@ def test_buscar_articulo_inexistente_lanza_excepcion():
         # Act + Assert
         with pytest.raises(ArticuloNoEncontrado):
             scraper.buscar_articulo("tema_que_no_existe_123")
+
+
+# HTML de una pagina que existe (200) pero cuyos parrafos estan vacios:
+# el bucle recorre los <p> sin acumular nada y debe lanzar ArticuloNoEncontrado.
+HTML_SIN_CONTENIDO = """
+<html>
+  <body>
+    <h1 id="firstHeading">Pagina vacia</h1>
+    <div class="mw-parser-output">
+      <p></p>
+      <p>   </p>
+    </div>
+  </body>
+</html>
+"""
+
+
+def test_buscar_articulo_sin_parrafos_lanza_excepcion():
+    # Arrange: respuesta 200 pero sin contenido legible
+    respuesta_falsa = Mock()
+    respuesta_falsa.status_code = 200
+    respuesta_falsa.text = HTML_SIN_CONTENIDO
+
+    with patch("src.scraper.requests.get", return_value=respuesta_falsa):
+        scraper = WikipediaScraper()
+
+        # Act + Assert
+        with pytest.raises(ArticuloNoEncontrado):
+            scraper.buscar_articulo("Pagina vacia")
