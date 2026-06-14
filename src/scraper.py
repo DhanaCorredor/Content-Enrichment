@@ -40,9 +40,14 @@ class WikipediaScraper:
         respuesta.raise_for_status()
 
         sopa = BeautifulSoup(respuesta.text, "html.parser")
-        titulo = sopa.find("h1", id="firstHeading").get_text(strip=True)
-
+        encabezado = sopa.find("h1", id="firstHeading")
         cuerpo = sopa.find("div", class_="mw-parser-output")
+        if encabezado is None or cuerpo is None:
+            raise ArticuloNoEncontrado(
+                f"La pagina de '{tema}' no tiene el formato esperado de un articulo."
+            )
+
+        titulo = encabezado.get_text(strip=True)
         parrafos = []
         for p in cuerpo.find_all("p"):
             texto = p.get_text().strip()
