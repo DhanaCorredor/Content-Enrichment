@@ -38,7 +38,7 @@ Notion se usa solo para **documentación**; el tablero de GitHub es la **fuente 
 | #15 | Controlar errores de la API (límite, sin conexión, clave inválida) | P1 | HU-8 |
 | #16 | Tests del enricher (cliente mockeado) | P0 | HU-3 |
 | #17 | `translator.py`: traducir con `deep-translator` | P0 | HU-4 |
-| #18 | `exporter.py`: guardar en `.txt` y `.pdf` (reportlab + Flowables) | P0 | HU-5 |
+| #18 | `exporter.py`: guardar en `.pdf` (reportlab + Flowables) | P0 | HU-5 |
 | #19 | Integrar el pipeline completo (`pipeline.py` y `main.py`) | P0 | HU-4/5 |
 | #20 | Tests de translator, exporter e integración del pipeline | P0 | HU-4/5 |
 | #21 | `summarizer.py`: generar resumen del contenido enriquecido | P1 | HU-6 |

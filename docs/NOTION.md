@@ -1,6 +1,6 @@
 # 📘 Content Enrichment — Wiki Técnica
 
-> Herramienta de línea de comandos (CLI) que, dado un tema, lo **busca en Wikipedia**, lo **enriquece con IA** (Groq, vía el SDK oficial de OpenAI), lo **traduce** al idioma elegido (`deep-translator`) y lo **exporta** como `.txt` o `.pdf`.
+> Herramienta de línea de comandos (CLI) que, dado un tema, lo **busca en Wikipedia**, lo **enriquece con IA** (Groq, vía el SDK oficial de OpenAI), lo **traduce** al idioma elegido (`deep-translator`) y lo **exporta** como `.pdf`.
 
 > ℹ️ **Estado actual:** estructura (scaffold) completa. Las clases y sus contratos están definidos; la lógica interna de cada método está pendiente de implementar (`raise NotImplementedError`). Esta wiki describe el **diseño acordado** que guía la implementación.
 
@@ -11,7 +11,7 @@
 El proyecto resuelve un flujo de 4 pasos encadenados, pensado como una **tubería (pipeline)**: la información entra cruda por un extremo y sale procesada por el otro.
 
 ```
-Tema  ──>  [1. Scraping]  ──>  [2. Enriquecer IA]  ──>  [3. Traducir]  ──>  [4. Exportar]  ──>  archivo.txt / .pdf
+Tema  ──>  [1. Scraping]  ──>  [2. Enriquecer IA]  ──>  [3. Traducir]  ──>  [4. Exportar]  ──>  archivo .pdf
 Wikipedia      texto crudo        texto mejorado          texto traducido         informe final
                                        │
                                        └──> [Extra: Resumir] (opcional)
@@ -41,7 +41,7 @@ flowchart TD
     M --> N{"¿Guardar informe?"}
     L -- No --> N
     N -- No --> Z(["Fin"])
-    N -- Si --> O[/"Elegir formato (txt o pdf) y nombre"/]
+    N -- Si --> O[/"Elegir nombre del archivo (PDF)"/]
     O --> P["Exportar a la carpeta output/"]
     P --> Z
 ```
@@ -75,7 +75,7 @@ flowchart TD
     E -.->|SDK openai| G[("Groq API")]
     SU -.->|SDK openai| G
     T -.->|deep-translator| GT[("Google Translate")]
-    X -.->|escribe| F["output/ (.txt / .pdf)"]
+    X -.->|escribe| F["output/ (.pdf)"]
 
     ENV[(".env<br/>GROQ_API_KEY")] -.->|clave| E
     ENV -.->|clave| SU
@@ -115,7 +115,7 @@ Content_Enrichment/
 │   ├── scraper.py           Etapa 1: WikipediaScraper
 │   ├── enricher.py          Etapa 2: Enricher (Groq vía SDK de OpenAI)
 │   ├── translator.py        Etapa 3: Translator (deep-translator)
-│   ├── exporter.py          Etapa 4: Exporter (.txt / .pdf)
+│   ├── exporter.py          Etapa 4: Exporter (.pdf)
 │   ├── summarizer.py        Extra: Summarizer (Groq vía SDK de OpenAI)
 │   └── logger_config.py     Configuración central de logs
 ├── tests/                   Suite de pruebas (paquete Python)
@@ -179,8 +179,8 @@ Content_Enrichment/
 - **Constructor:** `Exporter(carpeta_salida="output")`.
 - **Método principal:** `exportar(contenido: dict, nombre: str, formato: str) -> str`
   - Devuelve la ruta del archivo creado.
-  - Lanza `FormatoNoSoportado` si el formato no es `'txt'` ni `'pdf'`.
-- **Constante:** `FORMATOS = ("txt", "pdf")`.
+  - Lanza `FormatoNoSoportado` si el formato no es `'pdf'`.
+- **Constante:** `FORMATOS = ("pdf",)`.
 - **Nota técnica:** el PDF se genera con `reportlab` usando **Flowables** (`SimpleDocTemplate` + `story`), nunca con posicionamiento manual del canvas (evita solapamiento de texto).
 
 ### 5.6 `Pipeline` — Orquestador
@@ -204,7 +204,7 @@ flowchart TD
     E -->|"texto enriquecido"| T["Translator.traducir(texto)"]
     T -->|"texto traducido"| SU["Summarizer.resumir(texto)<br/>(opcional)"]
     SU -->|"resumen"| X["Exporter.exportar(contenido, nombre, formato)"]
-    X -->|"ruta del archivo"| OUT[/"archivo .txt / .pdf en output/"/]
+    X -->|"ruta del archivo"| OUT[/"archivo .pdf en output/"/]
 ```
 
 > 📌 **Contrato pendiente de cerrar:** la forma exacta del `dict` `contenido` que recibe `Exporter` (qué claves lleva: original / enriquecido / traducido / resumen) se definirá al implementar el `Pipeline`. Documentar aquí cuando se decida.
@@ -281,7 +281,7 @@ pytest --cov=src --cov-report=term-missing      # cobertura
 | HU-2 | Buscar en Wikipedia (título + 5 párrafos) | `WikipediaScraper` |
 | HU-3 | Enriquecer contenido con IA | `Enricher` |
 | HU-4 | Traducir al idioma elegido | `Translator` |
-| HU-5 | Exportar a `.txt` / `.pdf` con nombre a elección | `Exporter` |
+| HU-5 | Exportar a `.pdf` con nombre a elección | `Exporter` |
 | HU-6 | Resumen del contenido (extra) | `Summarizer` |
 | HU-7 | Sistema de logs | `logger_config` |
 | HU-8 | Mensajes de error claros | Todas (vía `try/except`) |

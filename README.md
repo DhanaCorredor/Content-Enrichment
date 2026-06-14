@@ -1,6 +1,6 @@
 # Content Enrichment
 
-> Herramienta CLI que busca un tema en Wikipedia, enriquece el contenido con IA, lo traduce al idioma elegido y genera un informe en `.txt` o `.pdf`.
+> Herramienta CLI que busca un tema en Wikipedia, enriquece el contenido con IA, lo traduce al idioma elegido y genera un informe en `.pdf`.
 
 **Estado:** 🚧 En desarrollo (proyecto de aprendizaje · FemCoders P5 Madrid) · **Python 3.10+**
 
@@ -11,13 +11,13 @@
 Dado un tema y un idioma, ejecuta una **tubería (pipeline)** de cuatro pasos:
 
 ```
-Tema ─▶ Wikipedia ─▶ Enriquecer (IA) ─▶ Traducir ─▶ Exportar ─▶ informe .txt / .pdf
+Tema ─▶ Wikipedia ─▶ Enriquecer (IA) ─▶ Traducir ─▶ Exportar ─▶ informe .pdf
 ```
 
 1. **Busca** el tema en Wikipedia y extrae el título + los primeros 5 párrafos.
 2. **Enriquece** el texto con IA (Groq, vía el SDK oficial de OpenAI).
 3. **Traduce** el contenido al idioma elegido (`deep-translator`).
-4. **Exporta** el resultado a `.txt` o a un PDF maquetado con `reportlab`.
+4. **Exporta** el resultado a un PDF maquetado con `reportlab`.
 5. *(Extra)* Genera un **resumen** del contenido enriquecido.
 
 ---
@@ -36,7 +36,7 @@ main.py ─▶ Pipeline ─▶ WikipediaScraper · Enricher · Translator · Sum
 | `Enricher` | Enriquecer el texto con IA (Groq). |
 | `Translator` | Traducir al idioma destino. |
 | `Summarizer` | Resumir el contenido (extra). |
-| `Exporter` | Guardar en `.txt` / `.pdf`. |
+| `Exporter` | Guardar en `.pdf`. |
 | `Pipeline` | Coordinar todas las etapas. |
 
 ---
