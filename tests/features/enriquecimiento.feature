@@ -1,5 +1,5 @@
 # language: es
-Caracteristica: Enriquecer y traducir un articulo de Wikipedia
+Característica: Enriquecer y traducir un articulo de Wikipedia
   Como usuaria
   Quiero buscar un tema, enriquecerlo y traducirlo
   Para obtener un informe mejorado en mi idioma
