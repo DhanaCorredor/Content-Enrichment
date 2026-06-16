@@ -59,15 +59,12 @@ if __name__ == "__main__":  # pragma: no cover
         from scraper import WikipediaScraper
         from groq_client import crear_cliente_groq
 
-    # 1. Cargar la clave de Groq desde .env
     load_dotenv()
     client = crear_cliente_groq(os.environ["GROQ_API_KEY"])
 
-    # 2. Etapa 1: traer texto crudo de Wikipedia
     articulo = WikipediaScraper(idioma="es").buscar_articulo("Marketing")
     texto_original = "\n\n".join(articulo["parrafos"])
 
-    # 3. Etapa 2: enriquecer con la IA
     texto_mejorado = Enricher(client).enriquecer(texto_original)
 
     print("===== ORIGINAL (Wikipedia) =====\n")

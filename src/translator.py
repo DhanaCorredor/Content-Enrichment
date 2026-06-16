@@ -8,9 +8,6 @@ from deep_translator.exceptions import (
     TooManyRequests,
 )
 
-# deep-translator no expone una unica excepcion madre: las de red y limite
-# heredan directamente de Exception. Agrupamos las relevantes para capturarlas
-# sin recurrir a un 'except Exception' generico.
 ERRORES_TRADUCCION = (BaseError, RequestError, ServerException, TooManyRequests)
 
 
@@ -50,11 +47,9 @@ if __name__ == "__main__":  # pragma: no cover
     except ModuleNotFoundError:
         from scraper import WikipediaScraper
 
-    # Etapa 1: texto crudo de Wikipedia (sin gastar Groq)
     articulo = WikipediaScraper(idioma="es").buscar_articulo("Marketing")
     texto = "\n\n".join(articulo["parrafos"])
 
-    # Etapa 3: traducir al ingles
     traducido = Translator().traducir(texto, "en")
 
     print("===== ORIGINAL (es) =====\n")

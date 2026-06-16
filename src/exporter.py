@@ -47,7 +47,6 @@ class Exporter:
         estilos = getSampleStyleSheet()
         documento = SimpleDocTemplate(ruta, pagesize=A4)
 
-        # 'story' es la lista de Flowables; reportlab los coloca y pagina solo.
         story = [
             Paragraph(escape(contenido["titulo"]), estilos["Title"]),
             Spacer(1, 0.5 * cm),

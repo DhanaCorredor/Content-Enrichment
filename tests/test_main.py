@@ -33,14 +33,13 @@ def _ejecutar_main(inputs, ejecutar_resultado=None, ejecutar_error=None, con_cla
 
 
 def test_main_flujo_completo(capsys):
-    # El primer dato va vacio para cubrir la validacion de _pedir.
     inputs = ["", "Marketing", "en", "informe"]
     pipeline = _ejecutar_main(inputs, ejecutar_resultado="output/informe.pdf")
 
     pipeline.ejecutar.assert_called_once_with("Marketing", "en", "informe", "pdf")
     salida = capsys.readouterr().out
     assert "output/informe.pdf" in salida
-    assert "no puede estar vacio" in salida  # se mostro el aviso de validacion
+    assert "no puede estar vacio" in salida
 
 
 def test_main_sin_clave_avisa(capsys):
